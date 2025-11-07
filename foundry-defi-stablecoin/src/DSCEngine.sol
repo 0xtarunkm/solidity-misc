@@ -14,13 +14,52 @@ pragma solidity ^0.8.13;
  * @notice This contract is Very loosely based on the MakerDAO 
  */
 contract DSCEngine {
+    /////////////////
+    /// Errors  ////
+    ////////////////
+    error DSCEngine__NeedsMoreThanZero();
+
+    /////////////////////////
+    /// State Variable  ////
+    ///////////////////////
+    mapping(address token => address priceFeed) private s_priceFeeds;
+
+    /////////////////
+    /// Modifiers ///
+    ////////////////
+    modifier moreThanZero(uint256 amount) {
+        if (amount == 0) {
+            revert DSCEngine__NeedsMoreThanZero();
+        }
+        _;
+    }
+
+    //////////////////
+    /// Functions ///
+    ////////////////
+    constructor() {
+        
+    }
+
+    ///////////////////////////
+    /// External Functions ///
+    /////////////////////////
     function depositCollateralAndMintDsc() external {}
 
-    function depositCollateral() external {}
+    /**
+        * @param tokenCollateralAddress - address of the collateral to deposit
+        * @param amountCollateral - amount of collateral to deposit
+     */
+    function depositCollateral(
+        address tokenCollateralAddress,
+        uint256 amountCollateral
+    ) external moreThanZero(amountCollateral) {}
 
     function redeemCollateralForDsc() external {}
 
-    functio
+    function redeemCollateral() external {}
+
+    function mintDsc() external {}
 
     function burnDsc() external {}
 
