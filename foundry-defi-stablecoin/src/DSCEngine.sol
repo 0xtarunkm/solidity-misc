@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
+
 /**
  * @title DSCEngine
  * @author Tarun Kumar
@@ -18,11 +20,14 @@ contract DSCEngine {
     /// Errors  ////
     ////////////////
     error DSCEngine__NeedsMoreThanZero();
+    error DSCEngine__TokenAddressesAndPriceFeedAddressesMuseBeSameLength();
 
     /////////////////////////
     /// State Variable  ////
     ///////////////////////
     mapping(address token => address priceFeed) private s_priceFeeds;
+
+    DecentralizedStableCoin private mut i_dsc;
 
     /////////////////
     /// Modifiers ///
@@ -37,8 +42,14 @@ contract DSCEngine {
     //////////////////
     /// Functions ///
     ////////////////
-    constructor() {
-        
+    constructor(address[] memory tokenAddresses, address[] memory priceFeedAddress, address dscAddress) {
+        if (tokenAddresses.length != priceFeedAddress.length) {
+            revert DSCEngine__TokenAddressesAndPriceFeedAddressesMuseBeSameLength();
+        }
+
+        for (uint256 i = 0; i < tokenAddresses.length; i++) {
+            s_priceFeeds[tokenAddresses[i]] = priceFeedAddress[i];
+        }
     }
 
     ///////////////////////////
